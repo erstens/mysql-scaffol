@@ -51,6 +51,7 @@
   <% }%>
   </code>
   You can writing `${xxxx}` var paste to the 'textarea' .
+  <image src="https://raw.githubusercontent.com/erstens/mysql-scaffol/master/image.png"/>
 
     ]]></description>
 
