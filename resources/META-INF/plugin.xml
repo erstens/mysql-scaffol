@@ -1,0 +1,79 @@
+<idea-plugin>
+  <id>com.erstens.plugins.scaffold</id>
+  <name>mysql-scaffold</name>
+  <version>1.0</version>
+  <vendor email="wwao121@gmail.com" url="http://erstens.coding.me">gaosi</vendor>
+
+  <description><![CDATA[
+  <h1>using beetl .</h1>
+  <a href="http://ibeetl.com">beetl document .</a>
+  <code>
+    import java.io.Serializable;
+    import java.util.Date;
+
+    public class ${className} implements Serializable {
+        <%for(map in columnPropList){%>
+        /**
+         * ${map.dbComment}
+         */
+        private ${map.javaType} ${map.javaHumpName};
+        <%}%>
+
+        <%for(map in columnPropList){%>
+        public ${map.javaType} get${map.javaName}() {
+            return ${map.javaHumpName};
+        }
+
+        public void set${map.javaName}(${map.javaType} ${map.javaHumpName}) {
+            this.${map.javaHumpName} = ${map.javaHumpName};
+        }
+        <%}%>
+    }
+  </code>
+  
+  <code>
+  //table properties .
+  key:${key}
+  className:${className}
+  entityName:${entityName}
+  tableName:${tableName}
+  
+  <%
+  for(map in columnPropList){
+  %>
+      //table-columns properties .
+      dbName,${map.dbName}
+      dbComment,${map.dbComment}
+      dbType,${map.dbType}
+      javaType,${map.javaType}
+      javaName,${map.javaName}
+      javaHumpName,${map.javaHumpName}
+  <% }%>
+  </code>
+  You can writing `${xxxx}` var paste to the 'textarea' .
+
+    ]]></description>
+
+  <change-notes><![CDATA[init]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="145.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+  </extensions>
+  <actions>
+    <group id="MyPlugin.SampleMenu" text="mysql-scaffold" >
+      <add-to-group group-id="MainMenu" anchor="last"  />
+      <action id="Myplugin.MainAction" class="com.erstens.scaffold.MainAction" text="generate code ..." />
+    </group>
+  </actions>
+
+</idea-plugin>
