@@ -1,8 +1,10 @@
 # mysql-scaffol
 mysqltable to java code(dao and entity)
 
+# starter:
+click memu, last one .
 
-# Features:
+# features:
 
 You can using these `var`:
 * ${key} 
