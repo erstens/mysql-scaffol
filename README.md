@@ -2,7 +2,12 @@
 mysqltable to java code(dao and entity)
 
 # starter:
-click memu, last one .
+
+1. click `memu`, last one.
+2. fill  `db-info` and `output dir` .
+3. click `beetl template settings` , expan panel .
+4. select `one` left , edit or paste the template for beetl .
+5. click `general` button.
 
 # features:
 
