@@ -250,10 +250,12 @@ public class MainJPanel extends JPanel  {
 
         this.entityCheckBox = new JCheckBox(Constant.CHECKED_ENTITY_TXT);
         entityCheckBox.setSelected(true);
+        entityCheckBox.setEnabled(false);
         panel.add(entityCheckBox);
 
         this.daoCheckBox = new JCheckBox(Constant.CHECKED_DAO_TXT);
         daoCheckBox.setSelected(true);
+        daoCheckBox.setEnabled(false);
         panel.add(daoCheckBox);
 
         return panel;
