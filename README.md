@@ -1,17 +1,17 @@
 # mysql-scaffol
-mysqltable to java code(dao and entity)
+mysql-table to java code(dao and entity)
 
 # starter:
 
 1. click `memu`, last one.
 2. fill  `db-info` and `output dir` .
 3. click `beetl template settings` , expan panel .
-4. select `one` left , edit or paste the template for beetl .
+4. click `one` left , edit or paste the template for beetl .
 5. click `general` button.
 
 # features:
 
-You can using these `var`:
+Editing `template` .You can using these `var`:
 * ${key} 
 * ${className}
 * ${entityName}
@@ -63,3 +63,16 @@ public class ${className} implements Serializable {
 }
 ```
 
+
+
+# template
+
+In template directory .(dao,entity)
+
+
+
+# cache
+
+Your data is saved in `{userdir}/.ideaPlugins_mysql-scaffold/DataMap.obj`
+
+> If there is a problem with the data, resetting the data requires deleting it.

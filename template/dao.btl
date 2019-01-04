@@ -1,0 +1,195 @@
+import org.springframework.jdbc.core.JdbcTemplate;
+import com.huiyuan.web.model.PageParam;
+import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
+
+
+import javax.annotation.Resource;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Date;
+import java.util.Optional;
+
+
+@Repository
+public class ${className} {
+    @Resource
+    private JdbcTemplate jdbcTemplate;
+
+    /**
+     * 根据id查询
+     * @param id
+     * @return
+     */
+    public ${entityName} getById(Integer id){
+        if(null == id){
+            return null;
+        }
+        ${entityName} bean = new ${entityName}() ;
+        bean.setId(id);
+        return selectListBy(bean, null).stream().findFirst().orElseGet(${entityName}::new);
+    }
+
+    /**
+     * 保存
+     * @return
+     */
+    public int save(${entityName} bean) {
+        return batchSave(Lists.newArrayList(bean))[0] ;
+    }
+
+    /**
+     * 批量保存
+     * @param beans
+     * @return 影响数
+     */
+    public int [] batchSave(List<${entityName}> beans) {
+        String sql = "INSERT INTO `${tableName}` (<%for(map in columnPropList){%><%if(mapLP.index != 1){%>,<%}%>`${map.dbName}`<%}%>) " +
+                "VALUES " +
+                " (<%for(map in columnPropList){%><%if(mapLP.index != 1){%>,<%}%>?<%}%>) ";
+
+        List<Object[]> param = new LinkedList<>();
+        for (${entityName} bean : beans) {
+            Object [] ary = new Object[${columnPropList.~size}] ;
+                <%for(map in columnPropList){%>
+            ary[${mapLP.index - 1}] = Optional.ofNullable(bean.get${map.javaName}()).orElse(<%if(map.javaType == "Integer"){%>${map.dbDefault}<%}%><%if(map.javaType == "String"){%>"${map.dbDefault}"<%}%><%if(map.javaType == "Date"){%>new Date()<%}%>) ;
+
+                <%}%>
+
+            param.add(ary);
+        }
+        return jdbcTemplate.batchUpdate(sql,param) ;
+    }
+
+    public int deleteByMap(Map<String,Object> map) {
+        return deleteByMaps(Lists.newArrayList(map))[0];
+    }
+
+
+    public int [] deleteByMaps(List<Map<String,Object>> list) {
+        Assert.notEmpty(list,"条件不能为空。");
+
+        StringBuffer sql = new StringBuffer() ;
+
+        List<Object[]> param = new LinkedList<>();
+        for (Map<String,Object> m : list) {
+            //sql
+            StringBuffer sqlBuf = new StringBuffer(";DELETE FROM ${tableName} WHERE 1=1 ");
+            Object [] keys = list.get(0).keySet().toArray();
+            for (int i = 0 ;i < keys.length ; i ++) {
+                sqlBuf.append(String.format("AND %s = ? ", keys[i])) ;
+            }
+            sql.append(sqlBuf);
+
+            //params
+            Object [] ary = new Object[keys.length] ;
+            for (int i = 0 ;i < keys.length ; i ++) {
+                ary[i] = m.get(keys[i]) ;
+            }
+            param.add(ary);
+        }
+
+        return jdbcTemplate.batchUpdate(sql.toString().substring(1),param) ;
+    }
+
+    public List<${entityName}> selectListBy(${entityName} bean,PageParam pageParam) {
+        Assert.notNull(bean,"条件不能为空。");
+
+        StringBuffer sqlBuf = new StringBuffer("SELECT <%for(map in columnPropList){%><%if(mapLP.index != 1){%>,<%}%>${map.dbName}<%}%> " +
+        "FROM ${tableName} " +
+        "WHERE 1=1 ");
+        List<Object> param = new LinkedList<>();
+
+           <%for(map in columnPropList){%>
+                    <%if(map.javaType == 'String'){%>
+        if (StringUtils.isNotBlank(bean.get${map.javaName}())) {
+            sqlBuf.append("AND ${map.dbName} = ? ") ;
+            param.add(bean.get${map.javaName}());
+        }
+                    <%}%>
+                    <%else {%>
+        if (bean.get${map.javaName}() != null) {
+            sqlBuf.append("AND ${map.dbName} = ? ") ;
+            param.add(bean.get${map.javaName}());
+        }
+                    <%}%>
+
+           <%}%>
+
+
+        if (null != pageParam) {
+            sqlBuf.append("LIMIT ?,?") ;
+            param.add((pageParam.getPageNum() - 1) * pageParam.getPageSize()) ;
+            param.add(pageParam.getPageSize());
+        }
+
+        return jdbcTemplate.query(sqlBuf.toString(), param.toArray(), new BeanPropertyRowMapper<>(${entityName}.class));
+
+    }
+
+
+
+    public Integer countListBy(${entityName} bean) {
+        Assert.notNull(bean,"条件不能为空。");
+
+        StringBuffer sqlBuf = new StringBuffer("SELECT count(id) " +
+            "FROM ${tableName} " +
+            "WHERE 1=1 ");
+        List<Object> param = new LinkedList<>();
+
+                  <%for(map in columnPropList){%>
+                           <%if(map.javaType == 'String'){%>
+        if (StringUtils.isNotBlank(bean.get${map.javaName}())) {
+             sqlBuf.append("AND ${map.dbName} = ? ") ;
+             param.add(bean.get${map.javaName}());
+        }
+                           <%}%>
+        <%else {%>
+        if (bean.get${map.javaName}() != null) {
+             sqlBuf.append("AND ${map.dbName} = ? ") ;
+             param.add(bean.get${map.javaName}());
+        }
+                           <%}%>
+
+                  <%}%>
+
+        return jdbcTemplate.queryForObject(sqlBuf.toString(), param.toArray(), Integer.class);
+
+    }
+
+
+    public int updateById(${entityName} bean) {
+        StringBuffer sqlBuf = new StringBuffer();
+        List<Object> params = new LinkedList<>();
+
+             <%for(map in columnPropList){%>
+             <%if(map.dbName == 'id'){continue;}%>
+                                        <%if(map.javaType == 'String'){%>
+        if (StringUtils.isNotBlank(bean.get${map.javaName}())) {
+            sqlBuf.append(", ${map.dbName} = ? ") ;
+            params.add(bean.get${map.javaName}());
+         }
+                                        <%}%>
+                                        <%else {%>
+        if (bean.get${map.javaName}() != null) {
+            sqlBuf.append(", ${map.dbName} = ? ") ;
+            params.add(bean.get${map.javaName}());
+        }
+                                        <%}%>
+
+                               <%}%>
+
+        if(CollectionUtils.isEmpty(params)) {
+            throw new IllegalArgumentException("参数不能为空。") ;
+        }
+        sqlBuf.deleteCharAt(0).insert(0,"UPDATE `${tableName}` SET ").append(" WHERE id = ?") ;
+        params.add(bean.getId());
+        return jdbcTemplate.update(sqlBuf.toString(), params.toArray());
+    }
+
+}

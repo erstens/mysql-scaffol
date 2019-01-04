@@ -1,0 +1,21 @@
+import java.io.Serializable;
+import java.util.Date;
+
+public class ${className} implements Serializable {
+	<%for(map in columnPropList){%>
+	/**
+	 * ${map.dbComment}
+	 */
+    private ${map.javaType} ${map.javaHumpName};
+    <%}%>
+
+    <%for(map in columnPropList){%>
+    public ${map.javaType} get${map.javaName}() {
+        return ${map.javaHumpName};
+    }
+
+    public void set${map.javaName}(${map.javaType} ${map.javaHumpName}) {
+        this.${map.javaHumpName} = ${map.javaHumpName};
+    }
+    <%}%>
+}
