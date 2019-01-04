@@ -1,61 +1,43 @@
 <idea-plugin>
   <id>com.erstens.plugins.scaffold</id>
   <name>mysql-scaffold</name>
-  <version>1.0</version>
-  <vendor email="wwao121@gmail.com" url="http://erstens.coding.me">gaosi</vendor>
+  <version>1.2.1</version>
+  <vendor email="wwao121@gmail.com" url="http://erstens.coding.me">erstens</vendor>
 
   <description><![CDATA[
-  <h1>using beetl .</h1>
-  <a href="http://ibeetl.com">beetl document .</a>
-  <code>
-    import java.io.Serializable;
-    import java.util.Date;
+<div>
+ <p>Generate simple java code(*DAO,*ENTITY) through database configuration</p>
+</div>
+<div>
+<h2>Link</h2>
+<p>
+  <a href="https://github.com/erstens/mysql-scaffol/blob/master/README.md" >Document</a>
+</p>
+<p>
+       <a href="https://github.com/erstens/mysql-scaffol/tree/master/template" >Template</a>
 
-    public class ${className} implements Serializable {
-        <%for(map in columnPropList){%>
-        /**
-         * ${map.dbComment}
-         */
-        private ${map.javaType} ${map.javaHumpName};
-        <%}%>
+</p>
+<p>
+       <a href="https://github.com/erstens/mysql-scaffol" >Source</a>
 
-        <%for(map in columnPropList){%>
-        public ${map.javaType} get${map.javaName}() {
-            return ${map.javaHumpName};
-        }
-
-        public void set${map.javaName}(${map.javaType} ${map.javaHumpName}) {
-            this.${map.javaHumpName} = ${map.javaHumpName};
-        }
-        <%}%>
-    }
-  </code>
-  
-  <code>
-  //table properties .
-  key:${key}
-  className:${className}
-  entityName:${entityName}
-  tableName:${tableName}
-  
-  <%
-  for(map in columnPropList){
-  %>
-      //table-columns properties .
-      dbName,${map.dbName}
-      dbComment,${map.dbComment}
-      dbType,${map.dbType}
-      javaType,${map.javaType}
-      javaName,${map.javaName}
-      javaHumpName,${map.javaHumpName}
-  <% }%>
-  </code>
-  You can writing `${xxxx}` var paste to the 'textarea' .
-  <image src="https://raw.githubusercontent.com/erstens/mysql-scaffol/master/image.png"/>
-
+</p>
+</div>
+<br/>
+<div>
+ <h2 >UI</h2>
+ <img src="https://raw.githubusercontent.com/erstens/mysql-scaffol/master/main.png"/>
+</div>
+<div>
+ <h2 >Generate</h2>
+ <img src="https://raw.githubusercontent.com/erstens/mysql-scaffol/master/general.png" />
+</div>
+<div>
+ <h2>You need</h2>
+ <p>Using the beetl template engine to configure the template. If you can, using the template in my open source project directly.</p>
+</div>
     ]]></description>
 
-  <change-notes><![CDATA[init]]>
+  <change-notes><![CDATA[<p>fix notes ui .</p>]]>
   </change-notes>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
